@@ -2,3 +2,5 @@ __pycache__
 /test.py
 /test.json
 /build
+/dist
+/lux_builder.egg-info
