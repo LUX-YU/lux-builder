@@ -6,6 +6,7 @@ import git
 import abc
 from typing import List
 
+
 class GitRemoteProgress(git.RemoteProgress):
     OP_CODES = [
         "BEGIN",
@@ -49,12 +50,13 @@ class GitRemoteProgress(git.RemoteProgress):
         # Remove BEGIN- and END-flag and get op name
         op_code_masked = op_code & cls.OP_MASK
         return cls.OP_CODE_MAP.get(op_code_masked, "?").title()
+
     def update(
-        self,
-        op_code: int,
-        cur_count: str | float,
-        max_count: str | float | None = None,
-        message: str | None = "",
+            self,
+            op_code: int,
+            cur_count: str | float,
+            max_count: str | float | None = None,
+            message: str | None = "",
     ) -> None:
         # Start new bar on each BEGIN-flag
         if op_code & self.BEGIN:
@@ -78,6 +80,7 @@ class GitRemoteProgress(git.RemoteProgress):
                 message=f"[bright_black]{message}",
             )
 
+
 class RemoteGitProject(StorageMethodInterface):
     def __init__(self) -> None:
         super().__init__()
@@ -85,7 +88,7 @@ class RemoteGitProject(StorageMethodInterface):
     def necessary_config_key(self) -> List[str]:
         return ["url", "branch"]
 
-    def enable(self, target_directory : Union[str, os.PathLike]):
+    def enable(self, target_directory: Union[str, os.PathLike]):
         try:
             # target repo is exists
             repo = git.Repo(target_directory)
@@ -100,8 +103,8 @@ class RemoteGitProject(StorageMethodInterface):
             git.Repo.clone_from(
                 remote_repo_url,
                 target_directory,
-                progress = GitRemoteProgress(),
-                branch = self._info["branch"],
+                progress=GitRemoteProgress(),
+                branch=self._info["branch"],
                 multi_options=[
                     "--depth=1",
                 ]

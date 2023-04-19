@@ -1,23 +1,28 @@
 import abc
-from typing import List, Tuple
+from typing import List, Tuple, Any
 
-class InfomationIncompleteError(Exception):
+
+class InformationIncompleteError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
-    def lost_word(self) -> Tuple[str]:
+    def lost_word(self) -> tuple[Any, ...]:
         return self.args
 
+
 class ConfigurableObject(object):
-    @abc.abstractclassmethod
+    def __init__(self):
+        self._info = None
+
+    @abc.abstractmethod
     def necessary_config_key(self) -> List[str]:
         return []
 
-    @abc.abstractclassmethod
+    @abc.abstractmethod
     def allowed_config_key(self) -> List[str]:
         return []
 
-    def configure(self, info : dict):
+    def configure(self, info: dict):
         lost_key = []
         is_lost_key = False
         for key in self.necessary_config_key():
@@ -25,7 +30,6 @@ class ConfigurableObject(object):
                 is_lost_key = True
                 lost_key.append(key)
         if is_lost_key:
-            raise InfomationIncompleteError(*tuple(lost_key))
-        
+            raise InformationIncompleteError(*tuple(lost_key))
+
         self._info = info
-        
